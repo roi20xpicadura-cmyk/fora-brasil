@@ -80,3 +80,7 @@ O fluxo atual tem 13 telas: destino, objetivo, família, prazo, nome, profissão
 - Contagem de abandono: última tela, sem atividade há 30 min e sem clique em comprar. Oferta final é alcance na tela, não prova de leitura. Clique não confirma pagamento; webhook da Kirvano ainda não integrado.
 - Relatórios: coorte por data de entrada em America/Recife, até 90 dias, cache de 30 s. Máximo 10.000 lotes por consulta com aviso explícito de parcialidade. CSV do funil e filtros por origem/campanha/dispositivo.
 - Dados anteriores à instalação não podem ser recuperados do navegador dos visitantes.
+
+
+## UTMify
+Dois loaders fornecidos pelo proprietário estão no head: pixel 6acbb07688cffa63372ec7a4 e UTMs com data-utmify-prevent-xcod-sck e data-utmify-prevent-subids. Executam apenas na rota pública /, incluindo navegação por hash. Não carregam no admin nem no aplicativo /meu-plano.
