@@ -56,3 +56,7 @@ Revisão completa dos dois PDFs: headline agora explicita a organização da sa�
 ## Escolha de destino
 
 A primeira tela permite escolher Estados Unidos, Portugal, Canadá, Espanha, Alemanha, Uruguai ou Ainda não decidi. A preferência explícita define o destino das perguntas, do resultado, das tarefas e da oferta. Quem não decidiu mantém a indicação editorial. O resultado informa que o plano de preparação está pronto, sem simular aprovação migratória. A versão 4 exige completar a nova sequência. Estados Unidos foi incluído com referência ao Departamento de Estado: https://travel.state.gov/content/travel/en/us-visas/immigrate.html. Não se determina uma categoria nem elegibilidade pelo quiz.
+
+## Edição visual da venda
+
+A página final mantém os 12 blocos principais, com textos reduzidos, comparação ilustrada, mapa visual do plano, etapas em três passos, cards de público e bônus compactos. A prévia usa gráfico circular calculado apenas pelas tarefas marcadas, identificado como progresso da demonstração. País, preço, checkout e garantia foram preservados.
