@@ -1,6 +1,7 @@
 export const offer = {
   price: 37.90 as number | null, // Preço da oferta em reais.
   billing: 'pagamento único',
+  previousPrice: null as number | null, // Preço anterior real, quando existir; null não exibe desconto.
   checkoutUrl: 'https://pay.kirvano.com/e3104457-9618-499e-8e8f-93007cffa1a9', // URL HTTPS do seu checkout. Não envie respostas pessoais na URL.
   guarantee: 'Você tem 30 dias de garantia para solicitar o reembolso da compra. Confira na Kirvano as condições e o canal de solicitação.', // Somente a política real, aprovada pelo responsável pelo produto.
   guaranteeUrl: '',

@@ -48,3 +48,7 @@ Remodelagem baseada nos três materiais fornecidos: desejo → reconhecimento do
 ## Página de vendas e bônus
 
 A página final segue os materiais de referência: promessa, conexão emocional, benefícios, por que funciona, demonstração, público, entregáveis, prova pela personalização, bônus, oferta, condições de compra e FAQ. Os bônus são o aplicativo e dois PDFs de duas páginas cada. Não são exibidos depoimentos fictícios, estatísticas de resultados, descontos sem preço anterior . Garantia de 30 dias informada pelo responsável, configurada em `lib/config.ts`. O quiz foi preservado.
+
+## Auditoria da página de vendas
+
+Revisão completa dos dois PDFs: headline agora explicita a organização da saída do Brasil; conexão emocional contém benefício de clareza e preparo da família; motivo de funcionamento e uso foram separados; comparação visual adicionada; bônus mostram prévias dos PDFs; oferta discrimina o pacote sem custo adicional dos bônus; garantia tem destaque de 30 dias; FAQ inclui iniciantes e início da preparação. `previousPrice` só deve receber um preço anterior real; null não apresenta desconto fictício. As provas são de funcionamento e personalização, não estatísticas de sucesso ou depoimentos inventados.
