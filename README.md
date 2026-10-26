@@ -68,3 +68,15 @@ As opções entram neutras em cada tela. Respostas continuam salvas para o resul
 
 ## Quiz enxuto — versão 6
 O fluxo atual tem 13 telas: destino, objetivo, família, prazo, nome, profissão, idioma, economia mensal, principal dificuldade, documentos, mecanismo da solução, visualização da mudança e decisão de ver o plano. Preserva as três fases dos PDFs com uma transição curta de três perguntas diferentes. A sequência de confirmações repetidas foi removida. Sessões das versões 4 e 5 preservam respostas relevantes e avançam para a próxima pergunta válida; respostas de etapas removidas não influenciam o resultado.
+
+
+## Painel de analytics (servidor Next.js)
+- `/admin`: painel privado; login por senha aleatória, cookie HttpOnly/Secure em produção, 8 h de sessão. Senha somente no arquivo local `outputs/acesso-painel-admin.txt`; nunca publicar este arquivo.
+- Vercel Blob privado `fora-brasil-analytics`: lotes imutáveis, eventos deduplicados por ID, sessões de 30 min. ADMIN_SESSION_SECRET e ADMIN_PASSWORD_SHA256 são secrets de produção. BLOB_READ_WRITE_TOKEN vem da conexão do armazenamento.
+- O site agora precisa do servidor Next.js; não usar exportação estática.
+- Atribuição por utm_source=instagram/ig/facebook/fb ou referência exata dessas redes; fbclid sozinho e origem desconhecida ficam de fora. Os links são gerados no painel.
+- Sem respostas pessoais no backend: somente identificador aleatório, campanha, dispositivo, horários e eventos. Nenhum nome, profissão, saldo ou resposta é enviado ao analytics.
+- Testes: `analytics_test=1` ou acesso logado no admin são excluídos dos resultados padrão. Visitantes são navegadores, não pessoas verificadas.
+- Contagem de abandono: última tela, sem atividade há 30 min e sem clique em comprar. Oferta final é alcance na tela, não prova de leitura. Clique não confirma pagamento; webhook da Kirvano ainda não integrado.
+- Relatórios: coorte por data de entrada em America/Recife, até 90 dias, cache de 30 s. Máximo 10.000 lotes por consulta com aviso explícito de parcialidade. CSV do funil e filtros por origem/campanha/dispositivo.
+- Dados anteriores à instalação não podem ser recuperados do navegador dos visitantes.
