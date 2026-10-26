@@ -60,3 +60,7 @@ A primeira tela permite escolher Estados Unidos, Portugal, Canadá, Espanha, Ale
 ## Edição visual da venda
 
 A página final mantém os 12 blocos principais, com textos reduzidos, comparação ilustrada, mapa visual do plano, etapas em três passos, cards de público e bônus compactos. A prévia usa gráfico circular calculado apenas pelas tarefas marcadas, identificado como progresso da demonstração. País, preço, checkout e garantia foram preservados.
+
+## Seleção do quiz e copy simples
+
+As opções entram neutras em cada tela. Respostas continuam salvas para o resultado, sem marcação visual automática. O preenchimento de hover foi removido e um novo quiz após a conclusão começa com respostas limpas. Tentativas incompletas podem ser retomadas. A venda passou a usar frases curtas, lista do que fazer e calendário da mudança no lugar de termos mais técnicos. Os nomes comerciais simplificados dos bônus correspondem aos mesmos PDFs entregues.
