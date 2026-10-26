@@ -64,3 +64,7 @@ A página final mantém os 12 blocos principais, com textos reduzidos, comparaç
 ## Seleção do quiz e copy simples
 
 As opções entram neutras em cada tela. Respostas continuam salvas para o resultado, sem marcação visual automática. O preenchimento de hover foi removido e um novo quiz após a conclusão começa com respostas limpas. Tentativas incompletas podem ser retomadas. A venda passou a usar frases curtas, lista do que fazer e calendário da mudança no lugar de termos mais técnicos. Os nomes comerciais simplificados dos bônus correspondem aos mesmos PDFs entregues.
+
+
+## Quiz enxuto — versão 5
+O fluxo atual tem 11 telas: destino, objetivo, família, prazo, nome, profissão, idioma, economia mensal, principal dificuldade, documentos e resultado. A sequência de confirmações repetidas foi removida. Sessões da versão 4 preservam respostas relevantes e avançam para a próxima pergunta válida; respostas de etapas removidas não influenciam o resultado.

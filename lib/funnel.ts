@@ -30,7 +30,7 @@ export function questionFor(step:number,name:string,destination?:Country):Questi
  const titles:Record<number,string>={
  0:`O que você busca em uma nova vida ${place.in}?`,
  8:`Quem vai com você ${place.to}?`,
- 9:`Quando quer começar a preparar sua mudança ${place.to}?`,
+ 9:`Em quanto tempo quer fazer sua mudança ${place.to}?`,
  2:`${name}, em que área pretende buscar oportunidades ${place.in}?`,
  5:`Para sua vida ${place.in}, qual idioma faz parte da sua bagagem?`,
  7:`Quanto consegue juntar por mês para sua mudança ${place.to}?`,
