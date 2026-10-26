@@ -1,11 +1,12 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {quizFlow,nextQuizStep,previousQuizStep,quizIsComplete} from '../lib/quiz';
-test('fluxo tem 7 decisões sem situação profissional duplicada',()=>{assert.equal(quizFlow.length,7);assert.equal(new Set(quizFlow).size,7);assert.equal(quizFlow.includes(4 as never),false);assert.equal(nextQuizStep(2),5);assert.equal(previousQuizStep(5),2)});
+import {quizFlow,nextQuizStep,previousQuizStep,quizIsComplete,quizPhase} from '../lib/quiz';
+import {initial,validStep} from '../lib/engine';
+import {questionFor,barrierInsight} from '../lib/funnel';
+test('13 telas únicas seguem desejo, obstáculos e solução, sem profissão repetida',()=>{assert.equal(quizFlow.length,13);assert.equal(new Set(quizFlow).size,13);assert.deepEqual(quizFlow.slice(0,4),[0,8,9,3]);assert.equal(quizFlow.filter(x=>x===2).length,1);assert.equal(quizPhase(0),0);assert.equal(quizPhase(10),1);assert.equal(quizPhase(15),2)});
 test('navegação para frente e para trás respeita a mesma sequência',()=>{quizFlow.forEach((step,i)=>{assert.equal(nextQuizStep(step),quizFlow[i+1]??null);assert.equal(previousQuizStep(step),quizFlow[i-1]??null)})});
-
-test('pergunta financeira é única, sem perguntar reserva atual',()=>{assert.equal(quizFlow.includes(6 as never),false);assert.equal(nextQuizStep(5),7);assert.equal(previousQuizStep(7),5)});
-
-test('cidadania foi retirada e objetivo segue direto para área profissional',()=>{assert.equal(quizFlow.includes(1 as never),false);assert.equal(nextQuizStep(0),2);assert.equal(previousQuizStep(2),0)});
-
-test('valores padrão não revelam país antes da última resposta',()=>{assert.equal(quizIsComplete([3,0,2],()=>true),false);assert.equal(quizIsComplete(quizFlow.slice(0,-1),()=>true),false);assert.equal(quizIsComplete(quizFlow,()=>true),true);assert.equal(quizIsComplete(quizFlow,step=>step!==9),false)});
+test('finanças perguntam apenas economia mensal e cidadania não reaparece',()=>{assert.equal(quizFlow.includes(6 as never),false);assert.equal(quizFlow.includes(1 as never),false);assert.equal(quizFlow.includes(4 as never),false)});
+test('nenhum destino aparece nas perguntas ou opções antes do resultado',()=>{for(const step of quizFlow){const q=questionFor(step,'Ana');assert.doesNotMatch(JSON.stringify(q),/Portugal|Canadá|Espanha|Alemanha|Uruguai/);if(step!==3)assert.ok(q.choices.length>=2)}});
+test('cada opção deixa sua própria etapa válida, incluindo respostas de dúvida',()=>{for(const step of quizFlow){for(const c of questionFor(step,'Ana').choices){assert.equal(validStep(step,{...initial,...c.values}),true,`${step}: ${c.label}`)}}});
+test('destino exige todas as respostas da nova sequência, sem liberar sessões antigas',()=>{assert.equal(quizIsComplete([3,0,2,5,7,8,9],()=>true),false);assert.equal(quizIsComplete(quizFlow.slice(0,-1),()=>true),false);assert.equal(quizIsComplete(quizFlow,()=>true),true);assert.equal(quizIsComplete(quizFlow,i=>i!==15),false)});
+test('resumo do obstáculo reflete a resposta sem diagnóstico inventado',()=>{assert.match(barrierInsight({...initial,barrier:'documentos'}).body,/documentos/);assert.match(barrierInsight({...initial,barrier:'exploracao'}).body,/conhecendo/);assert.doesNotMatch(barrierInsight(initial).body,/\d+%|nível|garant/)});

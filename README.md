@@ -8,13 +8,13 @@ Node 20.9+ e pnpm. `pnpm install`, `pnpm dev`, `pnpm build`. A exportação est�
 
 ## Fluxo atual
 
-Entrada → 7 perguntas → explicação breve → resultado → plano em 3 passos → oferta.
+Entrada → 13 telas em três fases (desejo, obstáculos e solução) → resumo do obstáculo → resultado → roteiro de ações → oferta.
 
-As perguntas são nome, objetivo, área de trabalho, idioma, economia mensal planejada, família e prazo. Só o nome exige digitação. As outras respostas usam cards com emojis contextuais e avanço automático. Cidadania, formação, experiência, oferta de trabalho e reserva atual não são perguntadas. Dados antigos desses campos são desconsiderados na retomada.
+As perguntas incluem objetivo, família, prazo, nome, área de trabalho, idioma, economia mensal, obstáculo, experiência de pesquisa, prioridade, desejo de futuro, interesse na organização e escolha de ver o roteiro. Só o nome exige digitação. As outras respostas usam cards com emojis contextuais e avanço automático. Cidadania, formação, experiência, oferta de trabalho e reserva atual não são perguntadas. Dados antigos desses campos são desconsiderados na retomada.
 
 ## Personalização e dados
 
-Respostas e checklist ficam no localStorage `plano-internacional-v1`; sem contas, upload de documentos ou sincronização entre dispositivos. As rotas por hash incluem `#inicio`, `#quiz`, `#explain`, `#result`, `#plan` e `#offer`. Perfil completo é necessário para retomar as telas posteriores ao quiz.
+Respostas e checklist ficam no localStorage `plano-internacional-v1`; sem contas, upload de documentos ou sincronização entre dispositivos. As rotas por hash incluem `#inicio`, `#quiz`, `#explain`, `#result`, `#plan` e `#offer`. Perfil completo é necessário para retomar as telas posteriores ao quiz. A versão do funil é 2: sessões da sequência antiga preservam os dados, mas precisam responder à nova sequência antes de revelar o país.
 
 `lib/engine.ts` ordena os países como prioridade editorial de investigação. Não calcula probabilidade de aprovação nem comprova elegibilidade. O nível dos idiomas não é avaliado. Cidadania não é presumida. Fontes oficiais foram consultadas em 26/10/2026 e precisam ser revalidadas quando as regras mudarem.
 
@@ -39,4 +39,8 @@ Fotos via Unsplash e fonte Inter via Google Fonts dependem de acesso à internet
 
 O roteiro inicial é gerado com destino, número de pessoas, área de trabalho e prazo declarados. A oferta apresenta R$ 37,90 com centavos, sem prometer visto, emprego ou data de saída.
 
-Marca atual: FORA BRASIL. O endereço e o nome técnico do projeto Vercel permanecem os mesmos. O resultado exige todas as sete respostas explicitamente registradas; valores padrão não liberam o destino. A foto inicial mostra uma família no aeroporto, sem legenda e sem indicar um país.
+Marca atual: FORA BRASIL. O endereço e o nome técnico do projeto Vercel permanecem os mesmos. O resultado exige todas as treze respostas explicitamente registradas; valores padrão não liberam o destino. A foto inicial mostra uma família no aeroporto, sem legenda e sem indicar um país.
+
+## Estrutura editorial atual
+
+Remodelagem baseada nos três materiais fornecidos: desejo → reconhecimento do obstáculo → introdução da organização como solução. A quantidade foi adaptada para 13 telas de resposta simples. Resumos usam o obstáculo e a experiência de pesquisa declarados, sem notas, diagnósticos ou provas sociais fictícias. Respostas de dúvida e interesse em avaliar são aceitas. A prioridade por documentos altera a ordem das tarefas; escolhas emocionais não alteram a elegibilidade migratória.

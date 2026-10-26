@@ -1,5 +1,5 @@
 export type Country='Portugal'|'Canadá'|'Espanha'|'Alemanha'|'Uruguai';
-export type Answers={goal:string;citizenship:string;tie:Country|'Nenhum';profession:string;education:string;experience:number;name:string;employment:string;offerCountry:Country|'Nenhum';languages:Record<string,number>;savings:number;monthly:number;people:number;peopleAtLeast?:boolean;financeEstimate?:boolean;months:number};
+export type Answers={goal:string;citizenship:string;tie:Country|'Nenhum';profession:string;education:string;experience:number;name:string;employment:string;offerCountry:Country|'Nenhum';languages:Record<string,number>;savings:number;monthly:number;people:number;peopleAtLeast?:boolean;financeEstimate?:boolean;months:number;barrier?:string;research?:string;priority?:string;future?:string;structure?:string;readiness?:string};
 export const initial:Answers={goal:'',citizenship:'',tie:'Nenhum',profession:'',education:'',experience:0,name:'',employment:'',offerCountry:'Nenhum',languages:{Inglês:0,Espanhol:0,Alemão:0,Francês:0},savings:0,monthly:0,people:1,months:12};
 export const countries:Country[]=['Portugal','Canadá','Espanha','Alemanha','Uruguai'];
 export const sources:Record<Country,{url:string;route:string;requirements:string[];photo:string;city:string}>={
@@ -31,18 +31,20 @@ export function recommend(a:Answers){
  if(a.citizenship==='europeia'&&['Portugal','Espanha','Alemanha'].includes(country)){route='Investigar direito de residência como cidadão da União Europeia e registro local. Não é uma rota de visto para brasileiro sem cidadania europeia.';requirements=['Validar passaporte europeu e exigências de registro local.','Conferir condições de trabalho, estudo ou recursos e saúde, além das regras para familiares.'];}
  return {country,ranking,reasons:reasons[country],route,requirements,projected:a.savings+a.monthly*a.months,source:sources[country],note:'Prioridade de pesquisa baseada em regras editoriais transparentes, não em percentual de compatibilidade. Não avalia elegibilidade, não garante visto e não substitui análise oficial.'};
 }
-export function validStep(step:number,a:Answers){switch(step){case 0:return !!a.goal;case 1:return !!a.citizenship;case 2:return a.profession.trim().length>=2;case 3:return a.name.trim().length>=2&&a.name.trim().length<=40;case 4:return !!a.employment;case 5:return true;case 6:return Number.isFinite(a.savings)&&a.savings>=0&&a.savings<=1e9;case 7:return Number.isFinite(a.monthly)&&a.monthly>=0&&a.monthly<=1e7;case 8:return Number.isInteger(a.people)&&a.people>=1&&a.people<=20;case 9:return Number.isInteger(a.months)&&a.months>=1&&a.months<=120;default:return false}}
+export function validStep(step:number,a:Answers){switch(step){case 0:return !!a.goal;case 1:return !!a.citizenship;case 2:return a.profession.trim().length>=2;case 3:return a.name.trim().length>=2&&a.name.trim().length<=40;case 4:return !!a.employment;case 5:return true;case 6:return Number.isFinite(a.savings)&&a.savings>=0&&a.savings<=1e9;case 7:return Number.isFinite(a.monthly)&&a.monthly>=0&&a.monthly<=1e7;case 8:return Number.isInteger(a.people)&&a.people>=1&&a.people<=20;case 9:return Number.isInteger(a.months)&&a.months>=1&&a.months<=120;case 10:return ['inicio','destino','documentos','organizacao','exploracao'].includes(a.barrier||'');case 11:return ['perdido','contradicao','adiando','andamento','inicio'].includes(a.research||'');case 12:return ['primeiro','documentos','familia','avaliar'].includes(a.priority||'');case 13:return ['familia','acao','carreira','experiencia'].includes(a.future||'');case 14:return ['sim','avaliar','sozinho'].includes(a.structure||'');case 15:return ['comecar','avaliar'].includes(a.readiness||'');default:return false}}
 export const money=(n:number,digits=0)=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:digits,maximumFractionDigits:digits}).format(n);
 
 export function buildInitialPlan(a:Answers){
  const country=recommend(a).country;
  const family=a.people===1?'para sua mudança':`de ${a.peopleAtLeast?'pelo menos ':''}${a.people} pessoas`;
  const area=a.profession&&a.profession!=='Outra área'?a.profession.toLowerCase():'sua área de trabalho';
- return {country,tasks:[
+ const tasks=[
   `Conferir a rota e os requisitos oficiais para ${country}`,
   `Separar os documentos ${family}`,
   `Pesquisar oportunidades e exigências em ${area} no destino`,
   `Organizar as próximas etapas no seu horizonte de ${a.months} meses`,
   'Revisar as pendências em fontes oficiais antes de assumir despesas',
- ]};
+ ];
+ if(a.priority==='documentos') [tasks[0],tasks[1]]=[tasks[1],tasks[0]];
+ return {country,tasks};
 }
