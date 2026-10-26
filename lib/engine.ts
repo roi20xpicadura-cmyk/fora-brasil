@@ -1,0 +1,48 @@
+export type Country='Portugal'|'Canadá'|'Espanha'|'Alemanha'|'Uruguai';
+export type Answers={goal:string;citizenship:string;tie:Country|'Nenhum';profession:string;education:string;experience:number;name:string;employment:string;offerCountry:Country|'Nenhum';languages:Record<string,number>;savings:number;monthly:number;people:number;peopleAtLeast?:boolean;financeEstimate?:boolean;months:number};
+export const initial:Answers={goal:'',citizenship:'',tie:'Nenhum',profession:'',education:'',experience:0,name:'',employment:'',offerCountry:'Nenhum',languages:{Inglês:0,Espanhol:0,Alemão:0,Francês:0},savings:0,monthly:0,people:1,months:12};
+export const countries:Country[]=['Portugal','Canadá','Espanha','Alemanha','Uruguai'];
+export const sources:Record<Country,{url:string;route:string;requirements:string[];photo:string;city:string}>={
+ Portugal:{url:'https://aima.gov.pt/pt/trabalhar/autorizacao-de-residencia-para-exercicio-de-atividade-profissional-subordinada-com-visto-de-residencia-art-88-o-n-o-1',route:'Visto de residência para trabalho e autorização de residência por atividade subordinada (art. 88.º, n.º 1).',requirements:['Confirmar contrato de trabalho e procedimento consular aplicável.','Verificar visto de residência, alojamento, meios de subsistência e inscrição na Segurança Social.'],photo:'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=1400&q=85',city:'Porto'},
+ Canadá:{url:'https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/who-can-apply.html',route:'Investigar o Federal Skilled Worker Program, gerido pelo Express Entry. Criar perfil não garante convite.',requirements:['Avaliar ocupação, experiência qualificada, escolaridade e equivalência do diploma.','Fazer teste oficial de idioma e verificar pontuação, admissibilidade e fundos exigidos. Idade não foi coletada: a avaliação está incompleta.'],photo:'https://images.unsplash.com/photo-1517935706615-2717063c2225?auto=format&fit=crop&w=1400&q=85',city:'Toronto'},
+ Espanha:{url:'https://www.inclusion.gob.es/es/web/unidadgrandesempresas/teletrabajadores',route:'Investigar residência para teletrabalho internacional, quando houver trabalho remoto elegível para empresa fora da Espanha.',requirements:['Comprovar relação profissional, atividade da empresa, qualificação ou experiência e autorização para trabalho remoto.','Verificar renda mínima vigente, cobertura de saúde, Segurança Social e antecedentes. A renda não foi coletada: a rota permanece condicional.'],photo:'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&w=1400&q=85',city:'Barcelona'},
+ Alemanha:{url:'https://www.make-it-in-germany.com/en/visa-recognition/visa-types/qualified-professionals',route:'Investigar visto para profissionais qualificados, com oferta de emprego qualificado e qualificação reconhecida ou comparável.',requirements:['Obter oferta de trabalho qualificado e verificar reconhecimento do diploma ou formação técnica.','Verificar licença para profissão regulamentada e condições adicionais, inclusive as relacionadas à idade.'],photo:'https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=1400&q=85',city:'Berlim'},
+ Uruguai:{url:'https://www.gub.uy/tramites/residencia-legal-permanente-mercosur',route:'Investigar residência legal permanente Mercosul para nacionais brasileiros, sujeita à documentação e análise oficial.',requirements:['Comprovar nacionalidade e reunir identidade, certidões e antecedentes exigidos.','Verificar apostilamento, tradução quando aplicável e documentos de saúde. Menores exigem documentação e autorizações específicas.'],photo:'https://images.unsplash.com/photo-1767668137778-19d3f8faab46?auto=format&fit=crop&w=1400&q=85',city:'Montevidéu'},
+};
+export function recommend(a:Answers){
+ const score:Record<Country,number>={Portugal:2,Canadá:0,Espanha:0,Alemanha:0,Uruguai:3};
+ const reasons:Record<Country,string[]>={Portugal:['O português reduz a barreira inicial de comunicação.'],Canadá:[],Espanha:[],Alemanha:[],Uruguai:['A nacionalidade brasileira permite investigar a residência Mercosul.']};
+ const add=(c:Country,n:number,r:string)=>{score[c]+=n;reasons[c].push(r)};
+ if(a.offerCountry!=='Nenhum')add(a.offerCountry,12,'Você declarou uma oferta profissional neste país; o vínculo ainda precisa ser comprovado.');
+ if(a.citizenship==='europeia'){add('Portugal',4,'Você declarou cidadania da União Europeia; confirme o passaporte e as condições de registro.');add('Espanha',3,'A cidadania europeia declarada permite investigar regras de livre circulação.');add('Alemanha',3,'A cidadania europeia declarada permite investigar regras de livre circulação.');}
+ if(a.employment==='remoto')add('Espanha',5,'Você trabalha remotamente para empresa fora do destino; vale investigar teletrabalho internacional.');
+ if((a.languages.Inglês>=3||a.languages.Francês>=3)&&a.education==='superior'&&a.experience>=1)add('Canadá',7,'Você declarou idioma avançado, graduação e experiência; são indícios para investigar imigração qualificada, sujeitos a testes e validação.');
+ if(a.languages.Alemão>=2&&(a.education==='superior'||a.education==='tecnico'))add('Alemanha',7,'Seu alemão e sua formação favorecem a investigação profissional; ainda é preciso verificar reconhecimento e oferta.');
+ if(a.education===''&&(a.languages.Inglês>=1||a.languages.Francês>=1))add('Canadá',4,'Você declarou falar inglês ou francês. Isso orienta a pesquisa sobre o Canadá; nível de idioma, testes oficiais, formação e experiência ainda precisam ser verificados.');
+ if(a.education===''&&a.languages.Alemão>=1)add('Alemanha',4,'Você declarou falar alemão. Vale investigar a Alemanha, mas nível de idioma, qualificação e oferta ainda precisam ser verificados.');
+ if(a.languages.Espanhol>=1&&a.goal==='experiencia')add('Espanha',4,'Você busca uma nova experiência e declarou falar espanhol. A Espanha entra como prioridade de pesquisa, sem rota aprovada.');
+ if(a.languages.Espanhol>=1){add('Espanha',2,'Você declarou falar espanhol. O nível ainda precisa ser avaliado.');add('Uruguai',2,'Seu espanhol pode facilitar a comunicação cotidiana.');}
+ if(a.goal==='proximidade')add('Uruguai',3,'Você priorizou proximidade com o Brasil.');
+ if(a.goal==='idioma')add('Portugal',4,'Você priorizou uma adaptação com menor barreira de idioma.');
+ if(a.goal==='carreira'&&a.languages.Inglês>=3&&a.education==='superior')add('Canadá',2,'Seu objetivo de carreira combina com investigar programas de trabalho qualificado.');
+ const ranking=countries.map(country=>({country,score:score[country]})).sort((x,y)=>y.score-x.score);
+ const country=ranking[0].country;
+ let route=sources[country].route,requirements=[...sources[country].requirements];
+ if(a.citizenship==='europeia'&&['Portugal','Espanha','Alemanha'].includes(country)){route='Investigar direito de residência como cidadão da União Europeia e registro local. Não é uma rota de visto para brasileiro sem cidadania europeia.';requirements=['Validar passaporte europeu e exigências de registro local.','Conferir condições de trabalho, estudo ou recursos e saúde, além das regras para familiares.'];}
+ return {country,ranking,reasons:reasons[country],route,requirements,projected:a.savings+a.monthly*a.months,source:sources[country],note:'Prioridade de pesquisa baseada em regras editoriais transparentes, não em percentual de compatibilidade. Não avalia elegibilidade, não garante visto e não substitui análise oficial.'};
+}
+export function validStep(step:number,a:Answers){switch(step){case 0:return !!a.goal;case 1:return !!a.citizenship;case 2:return a.profession.trim().length>=2;case 3:return a.name.trim().length>=2&&a.name.trim().length<=40;case 4:return !!a.employment;case 5:return true;case 6:return Number.isFinite(a.savings)&&a.savings>=0&&a.savings<=1e9;case 7:return Number.isFinite(a.monthly)&&a.monthly>=0&&a.monthly<=1e7;case 8:return Number.isInteger(a.people)&&a.people>=1&&a.people<=20;case 9:return Number.isInteger(a.months)&&a.months>=1&&a.months<=120;default:return false}}
+export const money=(n:number,digits=0)=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:digits,maximumFractionDigits:digits}).format(n);
+
+export function buildInitialPlan(a:Answers){
+ const country=recommend(a).country;
+ const family=a.people===1?'para sua mudança':`de ${a.peopleAtLeast?'pelo menos ':''}${a.people} pessoas`;
+ const area=a.profession&&a.profession!=='Outra área'?a.profession.toLowerCase():'sua área de trabalho';
+ return {country,tasks:[
+  `Conferir a rota e os requisitos oficiais para ${country}`,
+  `Separar os documentos ${family}`,
+  `Pesquisar oportunidades e exigências em ${area} no destino`,
+  `Organizar as próximas etapas no seu horizonte de ${a.months} meses`,
+  'Revisar as pendências em fontes oficiais antes de assumir despesas',
+ ]};
+}

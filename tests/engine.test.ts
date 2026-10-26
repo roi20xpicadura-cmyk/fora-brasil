@@ -1,0 +1,18 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {initial,recommend,validStep,money,buildInitialPlan} from '../lib/engine';
+test('perfil inicial aponta rota Mercosul, sem inventar compatibilidade',()=>{const r=recommend(initial);assert.equal(r.country,'Uruguai');assert.match(r.route,/Mercosul/);assert.match(r.note,/não garante visto/)});
+test('oferta declarada prioriza o país correto',()=>{for(const c of ['Portugal','Canadá','Espanha','Alemanha','Uruguai'] as const) assert.equal(recommend({...initial,offerCountry:c}).country,c)});
+test('cidadania pendente não gera livre circulação',()=>{const r=recommend({...initial,citizenship:'processo',goal:'idioma'});assert.equal(r.country,'Portugal');assert.doesNotMatch(r.route,/livre circulação/)});
+test('cidadania UE muda a rota europeia',()=>{const r=recommend({...initial,citizenship:'europeia',goal:'idioma'});assert.match(r.route,/União Europeia/)});
+test('formação e idioma orientam Canadá e Alemanha',()=>{assert.equal(recommend({...initial,education:'superior',experience:3,languages:{...initial.languages,Inglês:3}}).country,'Canadá');assert.equal(recommend({...initial,education:'tecnico',languages:{...initial.languages,Alemão:2}}).country,'Alemanha')});
+test('remoto favorece investigação espanhola, sem aprovação',()=>{const r=recommend({...initial,employment:'remoto'});assert.equal(r.country,'Espanha');assert.match(r.requirements.join(' '),/renda não foi coletada/)});
+test('projeção usa valores reais sem juros e aceita zero',()=>{assert.equal(recommend({...initial,savings:10000,monthly:500,months:12}).projected,16000);assert.equal(recommend({...initial,savings:0,monthly:0}).projected,0)});
+test('validação barra dados negativos, vazios, NaN e famílias fracionárias',()=>{assert.equal(validStep(3,initial),false);assert.equal(validStep(6,{...initial,savings:-1}),false);assert.equal(validStep(6,{...initial,savings:NaN}),false);assert.equal(validStep(8,{...initial,people:1.5}),false);assert.equal(validStep(9,{...initial,months:0}),false);assert.equal(validStep(6,initial),true)});
+test('etapa profissional exige apenas profissão',()=>{assert.equal(validStep(2,{...initial,profession:'Motorista'}),true);assert.equal(validStep(2,{...initial,profession:' '}),false)});
+test('perfil simplificado permite investigar os cinco destinos sem inventar formação',()=>{assert.equal(recommend({...initial,languages:{...initial.languages,Inglês:1}}).country,'Canadá');assert.equal(recommend({...initial,languages:{...initial.languages,Alemão:1}}).country,'Alemanha');assert.equal(recommend({...initial,goal:'experiencia',languages:{...initial.languages,Espanhol:1}}).country,'Espanha');assert.equal(recommend({...initial,goal:'idioma'}).country,'Portugal');assert.equal(recommend(initial).country,'Uruguai')});
+
+test('idioma sem nível não gera afirmação de fluência',()=>{for(const lang of ['Inglês','Francês']){const r=recommend({...initial,languages:{...initial.languages,[lang]:1}});assert.equal(r.country,'Canadá');assert.doesNotMatch(r.reasons.join(' '),/avançado|fluente/);assert.match(r.reasons.join(' '),/nível de idioma/)}});
+
+test('preço da oferta mantém os centavos sem arredondar para 38',()=>{assert.match(money(37.9,2),/37,90$/);assert.match(money(1000),/1\.000$/)});
+test('roteiro pronto usa destino, família, área e prazo informados',()=>{const a={...initial,profession:'Comércio e vendas',people:5,peopleAtLeast:true,months:24};const p=buildInitialPlan(a);assert.equal(p.country,recommend(a).country);assert.match(p.tasks.join(' '),/pelo menos 5 pessoas/);assert.match(p.tasks.join(' '),/comércio e vendas/);assert.match(p.tasks.join(' '),/24 meses/)});
