@@ -8,13 +8,13 @@ Node 20.9+ e pnpm. `pnpm install`, `pnpm dev`, `pnpm build`. A exportação est�
 
 ## Fluxo atual
 
-Entrada → 19 telas de resposta rápida → resultado com destino, resumo do obstáculo e primeiras ações → oferta.
+Entrada → 20 telas de resposta rápida → resultado com destino, resumo do obstáculo e primeiras ações → oferta.
 
 As perguntas incluem objetivo, família, prazo, nome, área de trabalho, idioma, economia mensal, obstáculo, experiência de pesquisa, prioridade, desejo de futuro, interesse na organização e escolha de ver o roteiro. Só o nome exige digitação. As outras respostas usam cards com emojis contextuais e avanço automático. Cidadania, formação, experiência, oferta de trabalho e reserva atual não são perguntadas. Dados antigos desses campos são desconsiderados na retomada.
 
 ## Personalização e dados
 
-Respostas e checklist ficam no localStorage `plano-internacional-v1`; sem contas, upload de documentos ou sincronização entre dispositivos. As rotas por hash incluem `#inicio`, `#quiz`, `#explain`, `#result`, `#plan` e `#offer`. Perfil completo é necessário para retomar as telas posteriores ao quiz. A versão do funil é 3: sessões da sequência antiga preservam os dados, mas precisam responder à nova sequência antes de revelar o país.
+Respostas e checklist ficam no localStorage `plano-internacional-v1`; sem contas, upload de documentos ou sincronização entre dispositivos. As rotas por hash incluem `#inicio`, `#quiz`, `#explain`, `#result`, `#plan` e `#offer`. Perfil completo é necessário para retomar as telas posteriores ao quiz. A versão do funil é 4: sessões da sequência antiga preservam os dados, mas precisam responder à nova sequência antes de revelar o país.
 
 `lib/engine.ts` ordena os países como prioridade editorial de investigação. Não calcula probabilidade de aprovação nem comprova elegibilidade. O nível dos idiomas não é avaliado. Cidadania não é presumida. Fontes oficiais foram consultadas em 26/10/2026 e precisam ser revalidadas quando as regras mudarem.
 
@@ -39,11 +39,11 @@ Fotos via Unsplash e fonte Inter via Google Fonts dependem de acesso à internet
 
 O roteiro inicial é gerado com destino, número de pessoas, área de trabalho e prazo declarados. A oferta apresenta R$ 37,90 com centavos, sem prometer visto, emprego ou data de saída.
 
-Marca atual: FORA BRASIL. O endereço e o nome técnico do projeto Vercel permanecem os mesmos. O resultado exige todas as dezenove respostas explicitamente registradas; valores padrão não liberam o destino. A foto inicial mostra uma família no aeroporto, sem legenda e sem indicar um país.
+Marca atual: FORA BRASIL. O endereço e o nome técnico do projeto Vercel permanecem os mesmos. O resultado exige todas as vinte respostas explicitamente registradas; valores padrão não liberam o destino. A foto inicial mostra uma família no aeroporto, sem legenda e sem indicar um país.
 
 ## Estrutura editorial atual
 
-Remodelagem baseada nos três materiais fornecidos: desejo → reconhecimento do obstáculo → introdução da organização como solução. São 4 perguntas de desejo, 5 de problema e 7 de solução, além de 3 respostas de perfil (profissão, idioma e economia mensal). As últimas 3 perguntas fazem a transição por confirmações, com alternativas de avaliação e autonomia. Os rótulos de fase não aparecem na interface. As antigas rotas #explain e #plan agora encaminham para o resultado consolidado. Resumos usam o obstáculo e a experiência de pesquisa declarados, sem notas, diagnósticos ou provas sociais fictícias. Respostas de dúvida e interesse em avaliar são aceitas. A prioridade por documentos altera a ordem das tarefas; escolhas emocionais não alteram a elegibilidade migratória.
+Remodelagem baseada nos três materiais fornecidos: desejo → reconhecimento do obstáculo → introdução da organização como solução. São 5 perguntas de desejo, 5 de problema e 7 de solução, além de 3 respostas de perfil (profissão, idioma e economia mensal). As últimas 3 perguntas fazem a transição por confirmações, com alternativas de avaliação e autonomia. Os rótulos de fase não aparecem na interface. As antigas rotas #explain e #plan agora encaminham para o resultado consolidado. Resumos usam o obstáculo e a experiência de pesquisa declarados, sem notas, diagnósticos ou provas sociais fictícias. Respostas de dúvida e interesse em avaliar são aceitas. A prioridade por documentos altera a ordem das tarefas; escolhas emocionais não alteram a elegibilidade migratória.
 
 ## Página de vendas e bônus
 
@@ -52,3 +52,7 @@ A página final segue os materiais de referência: promessa, conexão emocional,
 ## Auditoria da página de vendas
 
 Revisão completa dos dois PDFs: headline agora explicita a organização da saída do Brasil; conexão emocional contém benefício de clareza e preparo da família; motivo de funcionamento e uso foram separados; comparação visual adicionada; bônus mostram prévias dos PDFs; oferta discrimina o pacote sem custo adicional dos bônus; garantia tem destaque de 30 dias; FAQ inclui iniciantes e início da preparação. `previousPrice` só deve receber um preço anterior real; null não apresenta desconto fictício. As provas são de funcionamento e personalização, não estatísticas de sucesso ou depoimentos inventados.
+
+## Escolha de destino
+
+A primeira tela permite escolher Estados Unidos, Portugal, Canadá, Espanha, Alemanha, Uruguai ou Ainda não decidi. A preferência explícita define o destino das perguntas, do resultado, das tarefas e da oferta. Quem não decidiu mantém a indicação editorial. O resultado informa que o plano de preparação está pronto, sem simular aprovação migratória. A versão 4 exige completar a nova sequência. Estados Unidos foi incluído com referência ao Departamento de Estado: https://travel.state.gov/content/travel/en/us-visas/immigrate.html. Não se determina uma categoria nem elegibilidade pelo quiz.

@@ -7,3 +7,5 @@ test('app importa dados reais do quiz para tarefas e família',()=>{const a={...
 test('progresso mede tarefas concluídas, incluindo novas tarefas',()=>{const p=newPlan();p.tasks[0].done=true;assert.equal(taskProgress(p.tasks),25);p.tasks.push({id:'nova',title:'Nova tarefa',done:false});assert.equal(taskProgress(p.tasks),20)});
 test('salvamento pode ser restaurado sem perder andamento e documentos',()=>{const p=newPlan();p.tasks[0].done=true;p.documents[0].status='pronto';p.family.push('Maria');assert.deepEqual(restorePlan(JSON.parse(JSON.stringify(p))),p)});
 test('dados corrompidos são rejeitados antes de renderizar',()=>{assert.equal(restorePlan({version:1}),null);assert.equal(restorePlan({...newPlan(),tasks:[{id:'x',title:'t',done:'false'}]}),null);assert.equal(restorePlan({...newPlan(),documents:[{id:'x',title:'t',status:'aprovado'}]}),null)});
+
+test('app aceita Estados Unidos e importa preferência do quiz completo',()=>{const p=newPlan({...initial,name:'Ana',destinationPreference:'Estados Unidos'});assert.equal(p.country,'Estados Unidos');assert.deepEqual(restorePlan(JSON.parse(JSON.stringify(p))),p)});

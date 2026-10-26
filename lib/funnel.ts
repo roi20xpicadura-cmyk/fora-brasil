@@ -1,9 +1,10 @@
-import {money,type Answers} from './engine';
+import {money,countries,destinationPhrase,type Country,type Answers} from './engine';
 export type Choice={label:string;emoji:string;values:Partial<Answers>};
 export type Question={phase:string;title:string;choices:Choice[]};
 const choice=(label:string,emoji:string,values:Partial<Answers>):Choice=>({label,emoji,values});
-export function questionFor(step:number,name:string):Question{
+export function questionFor(step:number,name:string,destination?:Country):Question{
  const questions:Record<number,Question>={
+ 22:{phase:'Seu destino',title:'Em qual país você quer começar sua nova vida?',choices:[...countries.map(country=>choice(country,({'Estados Unidos':'🇺🇸',Portugal:'🇵🇹',Canadá:'🇨🇦',Espanha:'🇪🇸',Alemanha:'🇩🇪',Uruguai:'🇺🇾'})[country],{destinationPreference:country})),choice('Ainda não decidi','🧭',{destinationPreference:'Ainda não decidi'})]},
  0:{phase:'O que você quer',title:'O que você mais quer mudar ao sair do Brasil?',choices:[choice('Dar mais segurança e futuro à minha família','🛡️',{goal:'familia'}),choice('Buscar trabalho e uma vida financeira melhor','📈',{goal:'carreira'}),choice('Recomeçar onde seja mais fácil me comunicar','💬',{goal:'idioma'}),choice('Morar fora sem ficar tão longe do Brasil','📍',{goal:'proximidade'}),choice('Virar a página e viver algo novo','✈️',{goal:'experiencia'})]},
  8:{phase:'O que você quer',title:'Quem você quer levar para essa nova vida?',choices:[[1,'Vou sozinho','🎒'],[2,'Eu e mais uma pessoa','👥'],[3,'Somos 3 pessoas','👨‍👩‍👧'],[4,'Somos 4 pessoas','👨‍👩‍👧‍👦'],[5,'Somos 5 pessoas ou mais','🏡']].map(([n,label,emoji])=>choice(String(label),String(emoji),{people:Number(n),peopleAtLeast:Number(n)===5}))},
  9:{phase:'O que você quer',title:'Quando você quer tirar essa mudança do papel?',choices:[[6,'Nos próximos 6 meses','🚀'],[12,'Em até 1 ano','🗓️'],[24,'Em até 2 anos','🧳'],[36,'Em até 3 anos','🧭']].map(([n,label,emoji])=>choice(String(label),String(emoji),{months:Number(n)}))},
@@ -23,7 +24,25 @@ export function questionFor(step:number,name:string):Question{
  20:{phase:'Preparação',title:'Conferir o caminho antes de gastar faria diferença para você?',choices:[choice('Sim, quero me preparar antes de gastar','💡',{spending:'conferir'}),choice('Já estou fazendo isso','✅',{spending:'andamento'}),choice('Quero entender o que preciso conferir','🔎',{spending:'avaliar'})]},
  21:{phase:'Sua decisão',title:'Quer colocar os documentos da mudança em ordem?',choices:[choice('Sim, quero saber o que conferir','📂',{documentPlan:'sim'}),choice('Quero comparar com o que já organizei','📝',{documentPlan:'comparar'}),choice('Prefiro continuar organizando por conta própria','🧭',{documentPlan:'sozinho'})]},
  15:{phase:'Seu roteiro inicial',title:`${name}, vamos tirar sua mudança do papel?`,choices:[choice('Sim, quero ver meu plano personalizado','🚀',{readiness:'comecar'}),choice('Quero conhecer e avaliar com calma','🔎',{readiness:'avaliar'})]},
- };return questions[step]??questions[0];
+ };const question=questions[step]??questions[22];
+ if(!destination)return question;
+ const place=destinationPhrase(destination);
+ const titles:Record<number,string>={
+ 0:`O que você busca em uma nova vida ${place.in}?`,
+ 8:`Quem vai com você ${place.to}?`,
+ 9:`Quando quer começar a preparar sua mudança ${place.to}?`,
+ 2:`${name}, em que área pretende buscar oportunidades ${place.in}?`,
+ 5:`Para sua vida ${place.in}, qual idioma faz parte da sua bagagem?`,
+ 7:`Quanto consegue juntar por mês para sua mudança ${place.to}?`,
+ 10:`O que mais trava sua mudança ${place.to}?`,
+ 11:`Quando pesquisa sobre morar ${place.in}, o que acontece?`,
+ 12:`O que seu plano ${place.to} precisa resolver primeiro?`,
+ 13:`Imagine sua mudança ${place.to} organizada. O que mais importa?`,
+ 15:`${name}, quer ver seu plano de preparação ${place.to}?`,
+ };
+ // Profession is still collected as current experience, never treated as an overseas job offer.
+ if(step===2)titles[2]=`${name}, qual é sua área de trabalho hoje?`;
+ return {...question,title:titles[step]||question.title};
 }
 export function barrierInsight(a:Answers){
  const insights:Record<string,{title:string;body:string;action:string}>={

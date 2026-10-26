@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {initial,recommend,validStep,money,buildInitialPlan} from '../lib/engine';
+import {initial,recommend,validStep,money,buildInitialPlan,countries} from '../lib/engine';
 test('perfil inicial aponta rota Mercosul, sem inventar compatibilidade',()=>{const r=recommend(initial);assert.equal(r.country,'Uruguai');assert.match(r.route,/Mercosul/);assert.match(r.note,/não garante visto/)});
 test('oferta declarada prioriza o país correto',()=>{for(const c of ['Portugal','Canadá','Espanha','Alemanha','Uruguai'] as const) assert.equal(recommend({...initial,offerCountry:c}).country,c)});
 test('cidadania pendente não gera livre circulação',()=>{const r=recommend({...initial,citizenship:'processo',goal:'idioma'});assert.equal(r.country,'Portugal');assert.doesNotMatch(r.route,/livre circulação/)});
@@ -16,3 +16,7 @@ test('idioma sem nível não gera afirmação de fluência',()=>{for(const lang 
 
 test('preço da oferta mantém os centavos sem arredondar para 38',()=>{assert.match(money(37.9,2),/37,90$/);assert.match(money(1000),/1\.000$/)});
 test('roteiro pronto usa destino, família, área e prazo informados',()=>{const a={...initial,profession:'Comércio e vendas',people:5,peopleAtLeast:true,months:24};const p=buildInitialPlan(a);assert.equal(p.country,recommend(a).country);assert.match(p.tasks.join(' '),/pelo menos 5 pessoas/);assert.match(p.tasks.join(' '),/comércio e vendas/);assert.match(p.tasks.join(' '),/24 meses/)});
+
+test('destino escolhido prevalece sobre a pontuação de idioma e não presume aprovação',()=>{for(const country of countries){const a={...initial,destinationPreference:country,languages:{...initial.languages,Alemão:3}};const r=recommend(a);assert.equal(r.country,country);assert.equal(r.selectedByUser,true);assert.match(r.reasons[0],/Você escolheu/);assert.match(r.reasons[0],/não uma aprovação/);assert.equal(buildInitialPlan(a).country,country)}});
+test('quem ainda não decidiu mantém a indicação do perfil',()=>{const a={...initial,destinationPreference:'Ainda não decidi' as const,goal:'idioma'};assert.equal(recommend(a).country,'Portugal');assert.equal(recommend(a).selectedByUser,false);assert.equal(validStep(22,a),true);assert.equal(validStep(22,initial),false)});
+test('Estados Unidos tem fonte e rota condicionais, sem recomendar turismo para morar',()=>{const r=recommend({...initial,destinationPreference:'Estados Unidos'});assert.match(r.source.url,/travel.state.gov/);assert.match(r.route,/não determina/);assert.match(r.requirements.join(' '),/visitante não autoriza trabalhar/)});
