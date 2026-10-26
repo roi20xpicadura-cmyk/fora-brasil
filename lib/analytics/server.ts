@@ -3,6 +3,7 @@ import {getIronSession} from 'iron-session';
 import {createHash,timingSafeEqual} from 'node:crypto';
 import {get,list,put} from '@vercel/blob';
 import type {EventBatch,Visit} from './model';
+const immutableBatches=new Map<string,EventBatch>();
 export const STORE='store_9rkx7TQU8qUj034n';
 export async function adminSession(){return getIronSession<{admin?:boolean;expires?:number}>(await cookies(),{cookieName:'fb_admin',password:process.env.ADMIN_SESSION_SECRET!,ttl:8*3600,cookieOptions:{secure:process.env.NODE_ENV==='production',httpOnly:true,sameSite:'strict',path:'/'}})}
 export async function trackingSession(){return getIronSession<{visitor?:string;visit?:Visit;lastSeen?:number}>(await cookies(),{cookieName:'fb_visit',password:process.env.ADMIN_SESSION_SECRET!,ttl:180*86400,cookieOptions:{secure:process.env.NODE_ENV==='production',httpOnly:true,sameSite:'lax',path:'/'}})}
@@ -14,4 +15,4 @@ export async function saveBatch(batch:EventBatch,batchId:string){const date=new 
 export async function readBatches(from:string,to:string){
  const paths:string[]=[];let truncated=false;const months=new Set<string>();for(let t=Date.parse(from);t<=Date.parse(to);t+=86400000)months.add(new Date(t).toISOString().slice(0,7));
  outer:for(const month of months){let cursor:string|undefined;do{const result=await list({prefix:`events/${month}`,limit:1000,cursor});for(const b of result.blobs){const date=b.pathname.split('/')[1];if(date>=from&&date<=to)paths.push(b.pathname);if(paths.length>=10000){truncated=true;break outer}}cursor=result.hasMore?result.cursor:undefined}while(cursor)}
- const batches:EventBatch[]=[];let failed=0;for(let i=0;i<paths.length;i+=15){const rows=await Promise.allSettled(paths.slice(i,i+15).map(async path=>{const r=await get(path,{access:'private',useCache:false});if(!r||r.statusCode!==200)throw Error('missing');return JSON.parse(await new Response(r.stream).text()) as EventBatch}));for(const r of rows){if(r.status==='fulfilled')batches.push(r.value);else failed++}}return {batches,truncated,failed}}
+ const batches:EventBatch[]=[];let failed=0;for(let i=0;i<paths.length;i+=15){const rows=await Promise.allSettled(paths.slice(i,i+15).map(async path=>{const cached=immutableBatches.get(path);if(cached)return cached;const r=await get(path,{access:'private',useCache:false});if(!r||r.statusCode!==200)throw Error('missing');const batch=JSON.parse(await new Response(r.stream).text()) as EventBatch;if(immutableBatches.size>=4000)immutableBatches.delete(immutableBatches.keys().next().value!);immutableBatches.set(path,batch);return batch}));for(const r of rows){if(r.status==='fulfilled')batches.push(r.value);else failed++}}return {batches,truncated,failed}}

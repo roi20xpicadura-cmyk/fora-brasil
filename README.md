@@ -78,7 +78,7 @@ O fluxo atual tem 13 telas: destino, objetivo, família, prazo, nome, profissão
 - Sem respostas pessoais no backend: somente identificador aleatório, campanha, dispositivo, horários e eventos. Nenhum nome, profissão, saldo ou resposta é enviado ao analytics.
 - Testes: `analytics_test=1` ou acesso logado no admin são excluídos dos resultados padrão. Visitantes são navegadores, não pessoas verificadas.
 - Contagem de abandono: última tela, sem atividade há 30 min e sem clique em comprar. Oferta final é alcance na tela, não prova de leitura. Clique não confirma pagamento; webhook da Kirvano ainda não integrado.
-- Relatórios: coorte por data de entrada em America/Recife, até 90 dias, cache de 30 s. Máximo 10.000 lotes por consulta com aviso explícito de parcialidade. CSV do funil e filtros por origem/campanha/dispositivo.
+- Relatórios: coorte por data de entrada em America/Recife, até 90 dias, sem cache de relatório. Atualização automática ligada por padrão, consulta a cada 5 s após a resposta anterior, sem sobrepor requisições; atualização imediata ao retornar à aba. Eventos enviados após 300 ms sem interação, com flush ao sair ou comprar. Máximo 10.000 lotes por consulta com aviso explícito de parcialidade. CSV do funil e filtros por origem/campanha/dispositivo.
 - Dados anteriores à instalação não podem ser recuperados do navegador dos visitantes.
 
 
