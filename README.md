@@ -22,7 +22,7 @@ Valores financeiros escolhidos são aproximações para planejamento. A reserva 
 
 ## Condições comerciais
 
-Edite `lib/config.ts` para definir preço, modalidade de cobrança, checkout HTTPS, garantia real e suporte. Preço definido: R$ 37,90, pagamento único. Checkout Kirvano configurado nos botões de compra. Os antigos depoimentos ilustrativos estão no arquivo de configuração, mas não são exibidos na oferta atual. Não usar exemplos fictícios como prova social real. Esta entrega contém a prévia interativa do aplicativo, não um serviço de área de membros com liberação automática após pagamento.
+Edite `lib/config.ts` para definir preço, modalidade de cobrança, checkout HTTPS, garantia real e suporte. Preço definido: R$ 37,90, pagamento único. Checkout Kirvano configurado nos botões de compra. Os antigos depoimentos ilustrativos estão no arquivo de configuração, mas não são exibidos na oferta atual. Não usar exemplos fictícios como prova social real. A oferta contém uma demonstração interativa e um aplicativo funcional em `/meu-plano`, com tarefas, situação dos documentos, familiares e meta de preparação. Dados ficam no navegador, sem contas, sincronização ou validação de compra. A entrega na Kirvano deve apontar para esse endereço; não há liberação automática implementada. Os materiais estão em `/bonus/checklist-de-partida.pdf` e `/bonus/cronograma-da-mudanca.pdf`.
 
 ## Conversão
 
@@ -44,3 +44,7 @@ Marca atual: FORA BRASIL. O endereço e o nome técnico do projeto Vercel perman
 ## Estrutura editorial atual
 
 Remodelagem baseada nos três materiais fornecidos: desejo → reconhecimento do obstáculo → introdução da organização como solução. São 4 perguntas de desejo, 5 de problema e 7 de solução, além de 3 respostas de perfil (profissão, idioma e economia mensal). As últimas 3 perguntas fazem a transição por confirmações, com alternativas de avaliação e autonomia. Os rótulos de fase não aparecem na interface. As antigas rotas #explain e #plan agora encaminham para o resultado consolidado. Resumos usam o obstáculo e a experiência de pesquisa declarados, sem notas, diagnósticos ou provas sociais fictícias. Respostas de dúvida e interesse em avaliar são aceitas. A prioridade por documentos altera a ordem das tarefas; escolhas emocionais não alteram a elegibilidade migratória.
+
+## Página de vendas e bônus
+
+A página final segue os materiais de referência: promessa, conexão emocional, benefícios, por que funciona, demonstração, público, entregáveis, prova pela personalização, bônus, oferta, condições de compra e FAQ. Os bônus são o aplicativo e dois PDFs de duas páginas cada. Não são exibidos depoimentos fictícios, estatísticas de resultados, descontos sem preço anterior . Garantia de 30 dias informada pelo responsável, configurada em `lib/config.ts`. O quiz foi preservado.
