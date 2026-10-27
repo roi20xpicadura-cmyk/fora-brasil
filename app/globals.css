@@ -37,8 +37,8 @@
 /* Quiz choices never inherit hover or saved-answer highlighting on entry. */
 .view-quiz .option:active{background:#eef7ef;border-color:#169447;transform:scale(.995)}
 
-/* Opening screen: taller mobile photograph and gentle CTA emphasis. */
-.quiz-entry>.button{text-transform:uppercase;animation:entry-cta-pulse 3s ease-in-out infinite}
-@keyframes entry-cta-pulse{0%,100%{box-shadow:0 5px 18px #16944718;transform:scale(1)}50%{box-shadow:0 7px 25px #16944730;transform:scale(1.012)}}
+/* Opening screen: taller mobile photograph and stronger CTA emphasis. */
+.quiz-entry>.button{text-transform:uppercase;animation:entry-cta-pulse 1.8s ease-in-out infinite}
+@keyframes entry-cta-pulse{0%,100%{box-shadow:0 5px 18px #16944728;transform:scale(1)}50%{box-shadow:0 9px 30px #16944755,0 0 0 8px #16944710;transform:scale(1.035)}}
 @media(max-width:520px){.entry-image{height:auto;aspect-ratio:1.12;width:100%;margin:20px auto 18px}.entry-image img{object-position:center;filter:none}.quiz-entry{padding-bottom:18px}.quiz-entry>.button{font-size:13px;min-height:56px}.view-home footer{padding-top:12px}}
 @media(prefers-reduced-motion:reduce){.quiz-entry>.button{animation:none}}
